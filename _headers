@@ -1,0 +1,19 @@
+# Cloudflare Pages Headers
+# Wird von Cloudflare Pages beim Deploy ausgewertet (nicht vom Vite-Dev-Server).
+
+# APK: beim Aufruf direkt herunterladen statt anzeigen.
+# X-Robots-Tag noindex = zusätzliches Signal, dass Google die Datei nicht indexiert.
+/shadowping.apk
+  Content-Type: application/vnd.android.package-archive
+  Content-Disposition: attachment; filename="Shadowping.apk"
+  Cache-Control: public, max-age=604800
+  X-Robots-Tag: noindex
+
+# Banner-Bilder: als normale Bilder ausliefern + cachen
+/ShadowPing_Feature_1024x500.png
+  Content-Type: image/png
+  Cache-Control: public, max-age=604800
+
+/ShadowPing_Feature_3840x2160.png
+  Content-Type: image/png
+  Cache-Control: public, max-age=604800

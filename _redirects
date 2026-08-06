@@ -1,0 +1,3 @@
+# Cloudflare Pages Redirects
+# Alten APK-Pfad auf die neue URL umleiten (Backwards-Kompatibilität)
+/data/app/Shadowping.apk  /shadowping.apk  301

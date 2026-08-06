@@ -1,0 +1,13 @@
+# robots.txt für ShadowPing
+# Live-Domain: https://shadowping.pages.dev
+
+User-agent: *
+Allow: /
+
+# Die APK ist ein Download, keine Webseite – nicht bei Google indexieren.
+# Der Download für Besucher funktioniert trotzdem (robots.txt gilt nur für Crawler).
+Disallow: /shadowping.apk
+Disallow: /data/app/
+
+# Sitemap für Google & Co.
+Sitemap: https://shadowping.pages.dev/sitemap.xml
