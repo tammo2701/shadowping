@@ -1,6 +1,16 @@
 # Cloudflare Pages Headers
 # Wird von Cloudflare Pages beim Deploy ausgewertet (nicht vom Vite-Dev-Server).
 
+# Sicherheits-Header für alle Routen (Best-Practices-Prüfungen von Lighthouse).
+# HSTS: zwingt Browser auf HTTPS. XFO: kein Einbetten (Clickjacking).
+# COOP: isoliert den Ursprung; allow-popups ist für OAuth-Redirects sicher
+# (kein Popup-Auth, nur signInWithOAuth mit redirectTo).
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  X-Frame-Options: DENY
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+  Referrer-Policy: strict-origin-when-cross-origin
+
 # APK: beim Aufruf direkt herunterladen statt anzeigen.
 # X-Robots-Tag noindex = zusätzliches Signal, dass Google die Datei nicht indexiert.
 /shadowping.apk

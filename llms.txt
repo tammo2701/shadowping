@@ -1,0 +1,19 @@
+# ShadowPing
+
+> ShadowPing ist ein kostenloses, werbefreies GPS-Fangspiel für Android und Web. Jage als Hunter den Runner in Echtzeit oder fliehe als Runner vor der Jagd – private Spiele per Einladungscode, ohne Tracking.
+
+## Essential
+
+- [ShadowPing – Startseite](https://shadowping.pages.dev/)
+- [Spiel beitreten](https://shadowping.pages.dev/join/CODE)
+- [Android-App herunterladen (APK)](https://shadowping.pages.dev/shadowping.apk)
+
+## Additional
+
+- [Datenschutz: Lokale Daten & Berechtigungen](https://shadowping.pages.dev/auth)
+
+## Important URLs
+
+- Startseite: https://shadowping.pages.dev/
+- App-Shell (PWA): https://shadowping.pages.dev/manifest.json
+- Sitemap: https://shadowping.pages.dev/sitemap.xml
