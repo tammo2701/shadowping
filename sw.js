@@ -47,6 +47,18 @@ self.addEventListener('fetch', event => {
   const url = new URL(req.url)
   if (url.origin !== location.origin) return
 
+  // Navigationen (Client-Side-Routing, z.B. /lobby/xyz): im Offline-/App-
+  // Modus auf die gecachte App-Shell (index.html) zurückfallen. Sonst
+  // schlägt jede Navigation ohne Netz fehl, obwohl die Shell gecacht ist.
+  if (req.mode === 'navigate') {
+    event.respondWith(
+      fetch(req).catch(() =>
+        caches.match('/index.html').then(r => r || caches.match('/'))
+      )
+    )
+    return
+  }
+
   event.respondWith(
     caches.match(req).then(cached => {
       const network = fetch(req)
