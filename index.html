@@ -19,6 +19,9 @@
 
     <!-- ── SEO: Google & Social Media ─────────────────────────── -->
     <title>ShadowPing – GPS-Fangspiel | Verfolgen oder entkommen</title>
+    <!-- application-name: verhindert, dass Google den Hosting-Anbieter
+         ("Cloudflare") als Seitenname anzeigt; ShadowPing wird stattdessen verwendet. -->
+    <meta name="application-name" content="ShadowPing" />
     <meta name="description"
       content="ShadowPing ist das kostenlose GPS-Fangspiel für Android & Web. Spiele als Hunter und jage den Runner in Echtzeit – oder fliehe als Runner vor der Jagd. Ohne Werbung, ohne Tracking." />
     <meta name="robots" content="index, follow" />
@@ -44,6 +47,19 @@
     <meta name="twitter:description"
       content="Jage als Hunter den Runner oder fliehe als Runner vor der Jagd – in Echtzeit per GPS." />
     <meta name="twitter:image" content="https://shadowping.pages.dev/ShadowPing_Feature_1024x500.png" />
+
+    <!-- Strukturierte Daten: WebSite (sorgt dafür, dass Google den
+         Seitennamen "ShadowPing" anzeigt – nicht "Cloudflare") -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "ShadowPing",
+        "alternateName": "ShadowPing GPS Fangspiel",
+        "url": "https://shadowping.pages.dev/",
+        "inLanguage": "de"
+      }
+    </script>
 
     <!-- Strukturierte Daten: WebApplication -->
     <script type="application/ld+json">
@@ -76,9 +92,9 @@
         ]
       }
     </script>
-    <script type="module" crossorigin src="/assets/index-Cm_dlsQy.js"></script>
+    <script type="module" crossorigin src="/assets/index-BZp7OGpX.js"></script>
     <link rel="modulepreload" crossorigin href="/assets/maplibre-UemaIDU5.js">
-    <link rel="stylesheet" crossorigin href="/assets/index-Bjvwt6wC.css">
+    <link rel="stylesheet" crossorigin href="/assets/index-Dxo0ym3Q.css">
   </head>
   <body>
     <div id="root"></div>
