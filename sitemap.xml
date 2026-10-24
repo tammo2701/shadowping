@@ -1,20 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   Sitemap für ShadowPing (https://shadowping.pages.dev)
-  Die übrigen Routen (/dashboard, /lobby/:id, /game/:id, /results/:id, /join/:code)
-  erfordern eine Anmeldung und sind deshalb nicht hier aufgeführt.
+  Öffentliche Rechtsseiten sind enthalten; App-Routen mit Login oder Spielcode
+  (/dashboard, /lobby/:id, /game/:id, /results/:id, /join/:code) sind ausgeschlossen.
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://shadowping.pages.dev/</loc>
-    <lastmod>2026-08-06</lastmod>
+    <lastmod>2026-10-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://shadowping.pages.dev/auth</loc>
-    <lastmod>2026-08-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <loc>https://shadowping.pages.dev/impressum</loc>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://shadowping.pages.dev/datenschutz</loc>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
   </url>
 </urlset>

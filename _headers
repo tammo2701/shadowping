@@ -1,6 +1,19 @@
 # Cloudflare Pages Headers
 # Wird von Cloudflare Pages beim Deploy ausgewertet (nicht vom Vite-Dev-Server).
 
+# Vite-Dateinamen enthalten einen Content-Hash und können nach dem ersten
+# Abruf langfristig im Browser- und CDN-Cache bleiben.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Die HTML-Shell und der Service Worker müssen regelmäßig aktualisiert werden,
+# damit neue App-Versionen und der Update-Hinweis zeitnah erkannt werden.
+/index.html
+  Cache-Control: no-cache
+
+/sw.js
+  Cache-Control: no-cache
+
 # Sicherheits-Header für alle Routen (Best-Practices-Prüfungen von Lighthouse).
 # HSTS: zwingt Browser auf HTTPS. XFO: kein Einbetten (Clickjacking).
 # COOP: isoliert den Ursprung; allow-popups ist für OAuth-Redirects sicher

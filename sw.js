@@ -47,32 +47,58 @@ self.addEventListener('fetch', event => {
   const url = new URL(req.url)
   if (url.origin !== location.origin) return
 
+  // Vite-Dateien unter /assets/ tragen einen Content-Hash im Dateinamen.
+  // Sie sind unveränderlich: Nach dem ersten Abruf direkt aus dem Cache
+  // bedienen, statt bei jedem Seitenbesuch erneut das Netzwerk zu belasten.
+  const isHashedAsset = /^\/assets\/.*-[\w-]{8,}\.[^/]+$/.test(url.pathname)
+  if (isHashedAsset) {
+    const cachePromise = caches.open(SHELL_CACHE)
+    const cachedPromise = cachePromise.then(cache => cache.match(req)).catch(() => null)
+    const responsePromise = cachedPromise.then(cached => cached || fetch(req))
+    const cachePromiseOnMiss = responsePromise.then(response =>
+      cachedPromise.then(cached => {
+        if (!cached && response && response.status === 200) {
+          return cachePromise.then(cache => cache.put(req, response.clone())).catch(() => {})
+        }
+      })
+    )
+    event.waitUntil(cachePromiseOnMiss.catch(() => {}))
+    event.respondWith(responsePromise)
+    return
+  }
+
   // Navigationen (Client-Side-Routing, z.B. /lobby/xyz): im Offline-/App-
   // Modus auf die gecachte App-Shell (index.html) zurückfallen. Sonst
   // schlägt jede Navigation ohne Netz fehl, obwohl die Shell gecacht ist.
   if (req.mode === 'navigate') {
     event.respondWith(
       fetch(req).catch(() =>
-        caches.match('/index.html').then(r => r || caches.match('/'))
+        caches.open(SHELL_CACHE).then(cache =>
+          cache.match('/index.html').then(r => r || cache.match('/'))
+        ).catch(() => undefined)
       )
     )
     return
   }
 
-  event.respondWith(
-    caches.match(req).then(cached => {
-      const network = fetch(req)
-        .then(res => {
-          if (res && res.status === 200) {
-            const copy = res.clone()
-            caches.open(SHELL_CACHE).then(c => c.put(req, copy))
-          }
-          return res
-        })
-        .catch(() => cached)
-      return cached || network
+  // Für nicht-versionierte same-origin GETs bleibt stale-while-revalidate:
+  // sofort gecachte Inhalte anzeigen und die Aktualisierung im Hintergrund
+  // zuverlässig bis zum Ende der Anfrage speichern.
+  const cachePromise = caches.open(SHELL_CACHE)
+  const refreshPromise = cachePromise.then(cache =>
+    fetch(req).then(res => {
+      if (res && res.status === 200) {
+        return cache.put(req, res.clone()).catch(() => {}).then(() => res)
+      }
+      return res
     })
   )
+  event.waitUntil(refreshPromise.catch(() => {}))
+  event.respondWith(cachePromise.then(async cache => {
+    const cached = await cache.match(req)
+    if (cached) return cached
+    return refreshPromise.catch(() => cached)
+  }))
 })
 
 // Nachricht vom App-Code empfangen
@@ -85,15 +111,15 @@ self.addEventListener('message', event => {
 
   // In-App Notification anzeigen
   if (event.data?.type === 'NOTIFY') {
-    const { title, body, tag } = event.data
+    const { title, body, tag, vibrate, silent } = event.data
     self.registration.showNotification(title, {
       body,
       icon:     '/icon.svg',
       badge:    '/icon.svg',
-      vibrate:  [250, 100, 250],
+      vibrate:  vibrate || [250, 100, 250],
       tag:      tag || 'shadowping-alert',
       renotify: true,
-      silent:   false,
+      silent:   Boolean(silent),
     })
   }
 })
