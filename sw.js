@@ -112,7 +112,8 @@ self.addEventListener('message', event => {
   // In-App Notification anzeigen
   if (event.data?.type === 'NOTIFY') {
     const { title, body, tag, vibrate, silent } = event.data
-    self.registration.showNotification(title, {
+    const url = event.data.url || '/'
+    event.waitUntil(self.registration.showNotification(title, {
       body,
       icon:     '/icon.svg',
       badge:    '/icon.svg',
@@ -120,13 +121,18 @@ self.addEventListener('message', event => {
       tag:      tag || 'shadowping-alert',
       renotify: true,
       silent:   Boolean(silent),
-    })
+      data:     { url },
+    }))
   }
 })
 
 // Push-Notifications (für spätere Server-Push-Nachrichten)
 self.addEventListener('push', event => {
-  const data = event.data?.json() || {}
+  let data = {}
+  try { data = event.data?.json() || {} }
+  catch {
+    try { data = JSON.parse(event.data?.text() || '{}') } catch {}
+  }
   event.waitUntil(
     self.registration.showNotification(data.title || 'ShadowPing', {
       body:     data.body || '',
@@ -144,12 +150,22 @@ self.addEventListener('push', event => {
 // Klick auf Notification → App öffnen / fokussieren
 self.addEventListener('notificationclick', event => {
   event.notification.close()
+  let targetUrl = new URL('/', self.location.origin)
+  try { targetUrl = new URL(event.notification.data?.url || '/', self.location.origin) } catch {}
+  if (targetUrl.origin !== self.location.origin) targetUrl = new URL('/', self.location.origin)
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
-      for (const client of list) {
-        if ('focus' in client) return client.focus()
+      const sameOrigin = list.filter(client => {
+        try { return new URL(client.url).origin === self.location.origin } catch { return false }
+      })
+      const client = sameOrigin[0]
+      if (client) {
+        const navigation = typeof client.navigate === 'function'
+          ? client.navigate(targetUrl.href).catch(() => client)
+          : Promise.resolve(client)
+        return navigation.then(focused => focused?.focus?.())
       }
-      return clients.openWindow(event.notification.data?.url || '/')
+      return clients.openWindow(targetUrl.href)
     })
   )
 })
